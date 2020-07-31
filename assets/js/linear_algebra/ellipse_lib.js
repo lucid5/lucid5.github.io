@@ -69,12 +69,10 @@ function create_ring(p1, p2, z_range) {
   let polygons = [];
   let x = 0.5 + 0.5*p1[0].z/z_range;
 
+
   if (x <= 0.5) {
     x *= 2*x;
   } else {
-    let y = 1-x;
-    y *= 2*y;
-    x = 1 - y;
     x = 0.5 + (x - 0.5)*0.1;
   }
   
@@ -130,14 +128,14 @@ function circle_to_ellipse_shadow_map(v01, v02, v03, radius, n=20) {
   }
 
   let unit_circle = create_circle_points(1.0, 25),
-      wU = inv_up_triangle(cholesky_U(schur.J));
+      wJ = inv_up_triangle(cholesky_U(schur.J));
 
   function transform(circle, r, z, dx, dy) {
     let ellipse = [];
     circle.forEach(function(p) {
       ellipse.push({
-        x: wU[0][0]*p.x*r + wU[0][1]*p.y*r + dx,
-        y: wU[1][0]*p.x*r + wU[1][1]*p.y*r + dy,
+        x: wJ[0][0]*p.x*r + wJ[0][1]*p.y*r + dx,
+        y: wJ[1][0]*p.x*r + wJ[1][1]*p.y*r + dy,
         z: z,
       });
     });
