@@ -1,5 +1,5 @@
 ---
-title: Linear Algebra
+title: Linear Algebra Monologue
 ---
 
 
