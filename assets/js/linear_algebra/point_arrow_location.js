@@ -16,8 +16,8 @@ let origin = [300, 140],
 
 
 function select_svg(svg_id) {
-  svg = d3.select("#svg_point_arrow_location");
-
+  // svg = d3.select("#svg_point_arrow_location");
+  svg = d3.select(svg_id);
   lib = space_plot_lib(
     svg,
     origin,

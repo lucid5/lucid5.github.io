@@ -1,7 +1,7 @@
 let point_location = (function() {
 
 
-let origin = [300, 140], 
+let origin = [300, 150], 
   scale = 10, 
   scatter = [], 
   axis = [],
