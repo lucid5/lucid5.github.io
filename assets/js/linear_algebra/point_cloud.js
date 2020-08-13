@@ -1,7 +1,6 @@
-var point_cloud = (function() {
+let point_cloud = (function() {
 
-
-var origin = [150, 130], 
+let origin = [300, 150], 
   scale = 10, 
   scatter = [], 
   axis = [],
@@ -10,44 +9,58 @@ var origin = [150, 130],
   startAngleX = Math.PI/8. * 2,
   startAngleY = -Math.PI/8.,
   startAngleZ = Math.PI/8.
-  axis_len = 13;
+  axis_len = 13,
+  svg = null,
+  lib = null;
 
 
-var svg = d3.select("#svg_point_cloud");
+// let svg = d3.select(svg_id);
+function select_svg(svg_id) {
+  svg = d3.select(svg_id);
 
-var lib = space_plot_lib(
-  svg,
-  origin,
-  scale,
-  is_2d=false)
+  lib = space_plot_lib(
+    svg,
+    origin, 
+    scale,
+    is_2d=false);
+
+  svg = svg.call(d3.drag()
+           .on('drag', dragged)
+           .on('start', drag_start)
+           .on('end', drag_end))
+           .append('g');
+}
+
+// let lib = space_plot_lib(
+//   svg,
+//   origin,
+//   scale,
+//   is_2d=false)
 
 
-svg = svg.call(d3.drag()
-         .on('drag', dragged)
-         .on('start', drag_start)
-         .on('end', drag_end))
-         .append('g');
-
-
-
-axis = lib.init_axis(axis_len=axis_len);
+// svg = svg.call(d3.drag()
+//          .on('drag', dragged)
+//          .on('start', drag_start)
+//          .on('end', drag_end))
+//          .append('g');
 
 
 function plot(scatter, axis, tt){
 
-  var lines = [], points = [];
+  let lines = [], points = [];
   lib.plot_points(scatter, tt,
-                  drag_point_fn=function(d, i){dragged_point(i)},
-                  drag_start_fn=drag_start,
-                  drag_end_fn=drag_end);
+                  function(d, i){dragged_point(i)},
+                  drag_start,
+                  drag_end);
   lib.sort();
 }
 
 
 function init(){
+  axis = lib.init_axis(axis_len=axis_len);
   scatter = [];
 
-  for (var i=0; i < 15; i++){
+  for (let i=0; i < 15; i++){
     scatter.push({
         x: d3.randomUniform(-axis_len+3, axis_len-3)(),
         y: d3.randomUniform(-axis_len+3, axis_len-3)(), 
@@ -56,14 +69,11 @@ function init(){
     });
   }
 
-  alpha = startAngleX;
-  beta = startAngleY;
-
-  expectedScatter = lib.rotate_points(scatter, alpha, beta, startAngleZ);
-  expectedAxis = lib.rotate_lines(axis, alpha, beta, startAngleZ);
-  plot(expectedScatter, 
-       expectedAxis, 
-       1000);
+  expectedScatter = lib.rotate_points(scatter, startAngleX,
+                                      startAngleY, startAngleZ);
+  expectedAxis = lib.rotate_lines(axis, startAngleX,
+                                  startAngleY, startAngleZ);
+  plot(expectedScatter, expectedAxis, 1000);
   drag_end();
 }
 
@@ -108,11 +118,12 @@ function drag_end(){
   startAngleZ = 0;
 }
 
-init();
+// init();
 
 
 return {
-  init: function(){init();}
+  init: function(){init();},
+  select_svg: function(svg_id){select_svg(svg_id);}
 };
 
 })();
