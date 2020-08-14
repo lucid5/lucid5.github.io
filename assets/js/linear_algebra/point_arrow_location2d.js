@@ -56,7 +56,8 @@ function plot(scatter, axis, tt){
 
   lib.plot_lines(axis, tt);
 
-  lib.plot_lines(lines, tt, 'arrow');
+  // lib.plot_lines(lines, tt, 'arrow');
+  lib.plot_lines(lines, tt, "lines_to_show");
   lib.plot_points(points, tt,
                   drag_point_fn=function(d, i){dragged_point(i)},
                   drag_start_fn=drag_start,
