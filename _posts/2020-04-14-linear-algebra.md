@@ -6,7 +6,7 @@ title: Linear Algebra
 
 <script src="/assets/js/linear_algebra/lib.js"></script>
 
-Sunday morning's breezes. Quy nhon, a quiet small town by the ocean. In a busy coffee shop, two regular coffee buddies are chatting away on fun ideas. 
+Sunday morning's breezes. A quiet small town by the ocean. In a busy coffee shop, two regular coffee buddies are chatting away on fun ideas. 
 
 *"Linear Algebra?"* - said *Italica*, a student in Design who recently acquired an appetite for pretty illustrations of Math concepts.
 
