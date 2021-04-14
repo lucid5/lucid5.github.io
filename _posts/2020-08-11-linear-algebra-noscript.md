@@ -3,14 +3,13 @@ title: Ontest Linear Algebra _ No Script
 ---
 
 <script src="/assets/js/linear_algebra/lib.js"></script>
-
-
-## Vectors
+<script src="https://code.jquery.com/jquery-2.1.0.js"></script>
 
 <style type="text/css">
 .js {
-  font-size: 12.5;
-  color: #696969;
+  font-size: 18;
+  color: #191970;
+  /*color: #696969;*/
   text-align: center-justify;
 }
 
@@ -133,16 +132,24 @@ input:checked + .slider.show:after
     background-color: seashell;
     /*left: 40;*/
 }
+/*.svg.remove{
+
+}*/
 
 </style>
 
 <script>
+
 function draw_on_svg(svg_id, fn_2d, fn_3d=null) {
-  let is_3d = false,
-      data_2d = null,
+  let data_2d = null,
       data_3d = null;
-  fn_2d.select_svg('#svg_' + svg_id);
-  fn_2d.init(0);
+  
+  if (is_3d == true) {
+    fn_3d.select_svg('#svg_' + svg_id);
+    fn_3d.init(0);
+  } else {
+    fn_2d.select_svg('#svg_' + svg_id);
+    fn_2d.init(0);}
 
   d3.selectAll('#button')
     .on('click', function(){
@@ -155,12 +162,16 @@ function draw_on_svg(svg_id, fn_2d, fn_3d=null) {
 
   d3.selectAll('#switch')
     .on('click', function(){
-      is_3d = this.checked;
-      if (is_3d) {
+      let status = this.checked;
+      is_3d = status;
+
+      if (status) {
+        console.log('on_click_update_is_3d', status);
         data_2d = fn_2d.hasOwnProperty('data') ? fn_2d.data() : null;
         fn_3d.select_svg('#svg_' + svg_id);
         fn_3d.init(1000, data_2d);
       } else {
+        console.log('on_click_update_is_3d', status);
         data_3d = fn_3d.hasOwnProperty('data') ? fn_3d.data() : null;
         fn_2d.select_svg('#svg_' + svg_id);
         fn_2d.init(1000, data_3d);
@@ -176,23 +187,23 @@ function draw_on_svg(svg_id, fn_2d, fn_3d=null) {
   <iframe class="iframe" id="player"
           src="https://www.youtube.com/embed/g9hwjQBQFIo?enablejsapi=1"
           frameborder="0"
-          style="height:300;width:600" 
+          style="height:300;width:650" 
           allowfullscreen       
   ></iframe>
 </div>
 
-<div align="left" id='svg'>
-  <svg class="svg" height="300" width="600" id="svg_anonimous">
-    <center class='js' top='0' right='0' height="300" width="600">
-      <button id='play_button'>Back to video</button>
-      <button id='button'>Reset</button>
-      <label class='switch'>
-        <input type='checkbox' id='switch'> 
-        <div class='slider'></div>
-      </label>
-      <button id='compute_button' >Compute</button>
-    </center>    
-  </svg>
+<div align="left">
+  <svg class="svg" height="300" width="650" id="svg_anonimous"></svg>
+  <center class='js'>
+    Pause video to work on animation or click
+    <button id='play_button'>Back to video</button>
+    <button id='button'>Reset</button>
+    <label class='switch'>
+      <input type='checkbox' id='switch'> 
+      <div class='slider'></div>
+    </label>
+    <button id='compute_button' >Compute</button>
+  </center>    
 </div>
 
 <script src="/assets/js/linear_algebra/point_cloud.js"></script>
@@ -205,3 +216,6 @@ function draw_on_svg(svg_id, fn_2d, fn_3d=null) {
 <script src="/assets/js/linear_algebra/dot_product_collide2d.js"></script>
 <script src="/assets/js/linear_algebra/dot_product_collide.js"></script>
 <script src="/assets/js/linear_algebra/onTest_noScript_embed_youtube.js"></script>
+
+
+

@@ -67,31 +67,38 @@ function plot(scatter, axis, tt){
       ez: axis[1/unit - 1 + axis_len/unit * 2][1],
   };
 
-  let uTv = lib.dot_product(u, v);
+  let vTu = lib.dot_product(u, v);
   
-  let uTvv = {
-      x: v.x * uTv,
-      y: v.y * uTv,
-      z: v.z * uTv,
+  let vTuv = {
+      x: v.x * vTu,
+      y: v.y * vTu,
+      z: v.z * vTu,
       r: 1.8,
       color: 'grey'
   }
 
-  let uTvv_line = [
+  let vTuv_line = [
       {x: 0, y: 0, z: 0},
-      {x: uTvv.x, y: uTvv.y, z: uTvv.z,
+      {x: vTuv.x, y: vTuv.y, z: vTuv.z,
        tt: true}
   ]
-  uTvv_line.color = 0
-  uTvv_line.centroid_z = 1000;
-  uTvv_line.text = 'v\u1d40u = ' + uTv.toFixed(3);
-  uTvv_line.text_color = 0;
-  uTvv_line.font_size = 14;
-  uTvv_line.text_opacity = 1.0;
+  vTuv_line.color = 0
+  vTuv_line.centroid_z = 1000;
+  // vTuv_line.text = 'v\u1d40u = ' + vTu.toFixed(3);
+  // vTuv_line.text_color = 0;
+  vTuv_line.font_size = 14;
+  // vTuv_line.text_opacity = 1.0;
 
-  lines.push(uTvv_line);
+  lines.push(vTuv_line);
+  
+  let vTuv_line_text = [{text:'v\u1d40u = '.concat(vTu.toFixed(3)), 
+                         x: v.x * vTu/2, 
+                         y: v.y * vTu/2,
+                         tt: tt,
+                         text_color: 0}];
+  lib.plot_texts(vTuv_line_text, tt, 'vTuv_line_text');
 
-  lib.create_dash_segments(u, uTvv).forEach(
+  lib.create_dash_segments(u, vTuv).forEach(
     function(d) {
       d.centroid_z = -900;
       lines.push(d);
@@ -117,7 +124,7 @@ function plot(scatter, axis, tt){
     points.push(point);
   })
 
-  points.push(uTvv);
+  points.push(vTuv);
 
   lib.plot_lines(lines, tt, 'arrow');
   lib.plot_points(points, tt,
@@ -167,14 +174,14 @@ function plot(scatter, axis, tt){
                   {x: start_coord_x + col_unit * 2.65,
                    y: end_matrix_y + row_unit * 2/5,
                    color: 0}],
-      uTv_texts = [{text: 'v\u1d40u =',
+      vTu_texts = [{text: 'v\u1d40u =',
                     x: start_coord_x - col_unit,
                     y: end_matrix_y + row_unit * 1.25,
-                    text_color: 0, key: 'uTv_text'},
-                   {text: uTv.toFixed(3),
+                    text_color: 0, key: 'vTu_text'},
+                   {text: vTu.toFixed(3),
                     x: start_coord_x + col_unit * 2/3,
                     y: end_matrix_y + row_unit * 1.25,
-                    text_color: 0, key: 'uTv_numb'}];
+                    text_color: 0, key: 'vTu_numb'}];
   
   big_line.stroke_width = 0.7;
 
@@ -184,7 +191,7 @@ function plot(scatter, axis, tt){
   texts_to_show.push(...texts_plus);
   texts_to_show.push(...texts_multi);
   texts_to_show.push(...z_texts);
-  texts_to_show.push(...uTv_texts);
+  texts_to_show.push(...vTu_texts);
   texts_to_show.push(u_cell, v_cell);
 
   let lines_to_show = [];
@@ -192,8 +199,8 @@ function plot(scatter, axis, tt){
   lines_to_show.push(...lines_v);
   lines_to_show.push(big_line);
 
-  lib.plot_texts(texts_to_show, tt, 'texts');
-  lib.plot_lines(lines_to_show, tt, 'lines');
+  lib.plot_texts(texts_to_show, tt, 'texts_to_show');
+  lib.plot_lines(lines_to_show, tt, 'lines_to_show');
   lib.sort();
 }
 

@@ -19,106 +19,91 @@ function onPlayerReady(event) {
   event.target.playVideo();
 }
 
-
-// let timer = null;
-let svg_key =  null,
-    video_status = null;
-
-    // svg_key_2d = null;
-    // my_dictionary = null;
-
+let video_status = null,
+    time = null,
+    is_3d = false;  
 
 function onPlayerStateChange(event) {
   video_status = event.data;
-  console.log(video_status);
-  var time;
   time = ytplayer.getCurrentTime();
 
-  // if (time <= 60) {
-  //   // svg_key = 'point_cloud';
-  //   // console.log(svg_key);
-  //   if (video_status == 2) {
-  //     document.getElementById("svg_anonimous").style.zIndex = 100;
-  //     point_cloud.select_svg('#svg_' + "anonimous");
-  //     point_cloud.init();
-  //     d3.selectAll('#button')
-  //       .on('click', point_cloud.init) ;
-  //     video_play_control(event);
-  //   } else {
-  //     document.getElementById("svg_anonimous").style.zIndex = 1;
-  //   }   
-  // } else
-  if (time <= 60) {
-    svg_key = 'point_location';
-    console.log(svg_key);
-    if (video_status == 2) {
-      document.getElementById("svg_anonimous").style.zIndex = 100;
+  if (video_status == 2) {
+    preparing_svg("svg_anonimous");
+    video_play_control(event);
+    
+    if (time <= 60) {
       draw_on_svg(
           "anonimous",
           point_location2d,
-          point_location
+          point_location,
+          is_3d
       );
-      video_play_control(event);
-    } else {
-      document.getElementById("svg_anonimous").style.zIndex = 1;
-    }
-  } else if (60 < time & time <= 120) {
-    svg_key = 'point_arrow_location';
-    console.log(svg_key);
-    if (video_status == 2) {
-      document.getElementById("svg_anonimous").style.zIndex = 100;
+      console.log(is_3d);
+      // update_slider_status();
+
+    } else if (60 < time & time <= 120) {
       draw_on_svg(
           "anonimous",
           point_arrow_location2d,
-          point_arrow_location
+          point_arrow_location,
+          is_3d
       );
-    } else {
-      document.getElementById("svg_anonimous").style.zIndex = 1;
-    }
-    video_play_control(event);
-  } else if (120 < time & time <= 180) {
-    svg_key = 'dot_product_formula';
-    console.log(svg_key);
-    if (video_status == 2) {
-      document.getElementById("svg_anonimous").style.zIndex = 100;
+      console.log(is_3d);
+
+    } else if (120 < time & time <= 180) {
       draw_on_svg(
           "anonimous",
           dot_product_formula2d,
-          dot_product_formula
-      )
-    } else  {
-      document.getElementById("svg_anonimous").style.zIndex = 1;
-    };
-    video_play_control(event);
-  } else if (time > 180) {
-    svg_key = 'dot_product_collide';
-    console.log(svg_key);
-    if (video_status == 2) {
-      document.getElementById("svg_anonimous").style.zIndex = 100;
+          dot_product_formula,
+          is_3d
+      );
+      console.log(is_3d);
+      // update_slider_status();
+
+    } else if (time > 180) {
       draw_on_svg(
           "anonimous",
           dot_product_collide2d,
-          dot_product_collide
+          dot_product_collide,
+          is_3d
       );
+      console.log(is_3d);
+      // update_slider_status();
 
       d3.selectAll('#compute_button')
         .on('click', function(){
-            let is_3d = d3.selectAll('#switch').node().checked;
-            if (is_3d) {
-              dot_product_collide.compute();
-            } else {
-              dot_product_collide2d.compute(); 
-            }
+          if (ytplayer.getCurrentTime() <= 180) {
+            return;
+          }
+          let is_3d = d3.selectAll('#switch').node().checked;
+          if (is_3d) {
+            dot_product_collide.compute();
+          } else {
+            dot_product_collide2d.compute(); 
+          }
       });
-    } else {
-      document.getElementById("svg_anonimous").style.zIndex = 1;
     }
-    video_play_control(event);
-  }
+
+  } else {
+      document.getElementById("svg_anonimous").style.zIndex = 1;
+      update_slider_status();
+    }
+
 }
 
+
+function preparing_svg(id) {
+  // update_slider_status();
+  let svg = d3.select("#" + id);
+  // cleanup;
+  svg = svg.selectAll("*").remove();
+  // bring on top of iframe;
+  document.getElementById(id).style.zIndex = 100;
+  // video_play_control(event); // st wrong, does not work here.
+};
+
+
 function video_play_control(event) {
-  console.log('in control');
   d3.selectAll('#play_button')
     .on('click', function(){
       if (event.data==2) {
@@ -130,15 +115,55 @@ function video_play_control(event) {
 }
 
 
-function includeJs(jsFilePath) {
-    var js = document.createElement("script");
-
-    js.type = "text/javascript";
-    js.src = jsFilePath;
-    // js.defer = true;
-
-    document.body.appendChild(js);
+function update_slider_status(){
+  console.log('be4_update_3d', is_3d);
+  d3.selectAll('#switch')
+  .on('click', function(){
+    if (this.checked) {
+      is_3d = true;
+    } else {
+      is_3d = false;
+    }
+    console.log('update_3d', is_3d);
+  })
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+// function check_slider_status(){
+//   let is_3d = null;
+//   this.d3.selectAll('#switch');
+//   // is_3d = this.checked;
+//   if (this.checked) {
+//       is_3d = true;
+//       console.log('check_3d:', is_3d);
+//     } else {
+//       is_2d = true;
+//       console.log('check_3d:', is_3d);
+//     }  
+// };
+// function includeJs(jsFilePath) {
+//     var js = document.createElement("script");
+
+//     js.type = "text/javascript";
+//     js.src = jsFilePath;
+//     // js.defer = true;
+
+//     document.body.appendChild(js);
+// }
 
 // console.log(svg_id, svg_id_2d);
 //     includeJs(svg_id);
@@ -147,3 +172,24 @@ function includeJs(jsFilePath) {
 // import {point_arrow_location_2d} from "./assets/js/linear_algebra/point_arrow_location_2d.js";
     // import {point_arrow_location} from "./assets/js/linear_algebra/point_arrow_location.js";
 
+// svg.selectAll("*").remove();
+//svg.selectAll.remove();
+//('svg_anonimous').remove();
+
+
+// add clean up inside draw on svg but doesn't work, be before or after chosing svg.
+// d3.select("svg_anonimous").remove();
+
+// function update_slider_status(){
+//     d3.selectAll('#switch')
+//       .on('click', function(){
+//         is_3d = this.checked;
+//         if (this.checked) {
+//           is_3d = true;
+//           console.log('update_3d', is_3d);
+//         } else {
+//           is_2d = true;
+//           console.log('update_3d', is_3d);
+//         } 
+//       })
+// };
